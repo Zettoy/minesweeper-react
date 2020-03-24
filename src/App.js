@@ -1,5 +1,8 @@
 import React from 'react';
+import GameBoard from './GameBoard';
 
-const App = () => <span>Hello</span>
+const App = () => (
+    <GameBoard/>
+);
 
 export default App;
