@@ -2,16 +2,30 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Div = styled.div`
-    height: 50px;
-    width: 50px;
-    outline: 1px solid black;
+    height: 48px;
+    width: 48px;
+    border: 1px solid black;
 
     line-height: 50px;
     text-align: center;
     font-size: 24px;
+
+    position: relative;
 `;
 
-const Tile = ({tile: {value, isMine, isFlag}}) => {
+const Cover = styled.span`
+    height: 48px;
+    width: 48px;
+    background-color: lightgrey;
+    
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    opacity: ${({isRevealed}) => isRevealed ? 0 : 1};
+`;
+
+const Tile = ({tile: {value, isMine, isFlag, isRevealed}, onClick}) => {
     let output;
     if (isMine) {
         output = 'M';
@@ -22,17 +36,22 @@ const Tile = ({tile: {value, isMine, isFlag}}) => {
     }
 
     return (
-        <Div>{output}</Div>
+        <Div onClick={event => onClick(event)} onContextMenu={event => onClick(event)}>
+            {output}
+            <Cover isRevealed={isRevealed}/>
+        </Div>
     )
 };
 
 export default Tile;
 
 export class TileModule {
-    constructor() {
+    constructor(row, col) {
         this._value = 0;
         this._isMine = false;
         this._isFlag = false;
+        this._isRevealed = false;
+        this._position = {row, col};
     }
 
     get value() {
@@ -47,6 +66,14 @@ export class TileModule {
         return this._isFlag;
     }
 
+    get isRevealed() {
+        return this._isRevealed;
+    }
+
+    get position() {
+        return this._position;
+    }
+
     set value(value) {
         this._value = value;
     }
@@ -57,5 +84,9 @@ export class TileModule {
 
     set isFlag(isFlag) {
         this._isFlag = isFlag;
+    }
+
+    set isRevealed(isRevealed) {
+        this._isRevealed = isRevealed;
     }
 }
