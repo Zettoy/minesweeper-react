@@ -95,13 +95,16 @@ export const flagAndUnflag = (board, tile) => {
     board[row][col].isFlag = !board[row][col].isFlag;
 };
 
-export const isGameover = (board, numOfMines) => {
+export const isGameover = board => {
     const size = board.length;
+
+    let numOfMines = 0;
     let numOfUnrevealedTiles = 0;
     let numOfFlags = 0;
     
     for (let i = 0; i < size; i ++) {
         for (let j = 0; j < size; j ++) {
+            if (board[i][j].isMine) numOfMines ++; 
             if (!board[i][j].isRevealed) numOfUnrevealedTiles ++;
             if (board[i][j].isFlag) numOfFlags ++;
         }

@@ -74,7 +74,7 @@ const GameBoard = () => {
         }
 
         setBoard(newBoard);
-        setGameover(isGameover(newBoard, numOfMines));
+        setGameover(isGameover(newBoard));
     };
 
     return (
