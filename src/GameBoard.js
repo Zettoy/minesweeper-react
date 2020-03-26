@@ -13,15 +13,16 @@ import {
 } from './helper';
 
 const Container = styled.div`
-    height: 100%;
     margin: 0 auto;
 
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
 `;
 
 const Board = styled.div`
+    margin: 20px 0;
+
     outline: 1px solid black;
 
     height: ${({size}) => size * 50}px;
@@ -32,12 +33,18 @@ const Board = styled.div`
 `;
 
 const GameBoard = () => {
-    const size = 8;
-    const numOfMines = 10;
+    const [size, setSize] = useState(8);
+    const [numOfMines, setNumOfMines] = useState(10);
 
     const [gameover, setGameover] = useState(false);
     const [board, setBoard] = useState(generateEmptyBoard(size));
     const [isFirstClick, setIsFirstClick] = useState(true);
+
+    const newGame = () => {
+        setGameover(false);
+        setBoard(generateEmptyBoard(size));
+        setIsFirstClick(true);
+    };
 
     const handleClick = (event, tile) => {
         event.preventDefault();
@@ -51,29 +58,35 @@ const GameBoard = () => {
 
         } else {
             if (tile.isFlag) return;
+            if (tile.isMine) {
+                revealAllMines(newBoard)
+                setBoard(newBoard);
+                setGameover(true);
+                return;
+            }
 
             if (isFirstClick) {
                 generateMinesOnBoard(newBoard, numOfMines, tile.position)
                 setIsFirstClick(false);
             }
 
-            if (tile.isMine) {
-                setGameover(true);
-                revealAllMines(newBoard)
-
-            } else {
-                flood(newBoard, tile);
-            }
-
+            flood(newBoard, tile);
         }
 
-        setGameover(isGameover(newBoard, numOfMines));
         setBoard(newBoard);
+        setGameover(isGameover(newBoard, numOfMines));
     };
 
     return (
         <Container>
-            <Board size={size}>
+            <div>
+                <label>Size:</label>
+                <input onChange={event => setSize(event.target.value)}/>
+                <label>Mines:</label>
+                <input onChange={event => setNumOfMines(event.target.value)}/>
+                <button onClick={newGame}>New Game</button>
+            </div>
+            <Board size={board.length}>
                 {board.map((row, keyRow) => (
                     row.map((tile, keyCol) => (
                         <Tile
