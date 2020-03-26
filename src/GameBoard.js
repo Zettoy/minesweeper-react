@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { cloneDeep } from 'lodash';
 
 import Tile from './Tile';
 import {
@@ -39,7 +40,10 @@ const GameBoard = () => {
         event.preventDefault();
 
         if (event.type === 'contextmenu') {
-            // TODO: flag
+            const newBoard = cloneDeep(board);
+            const { row, col } = tile.position;
+            newBoard[row][col].isFlag = !newBoard[row][col].isFlag;
+            setBoard(newBoard);
             return;
         }
 

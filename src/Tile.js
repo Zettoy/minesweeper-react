@@ -38,7 +38,8 @@ const Tile = ({tile: {value, isMine, isFlag, isRevealed}, onClick}) => {
     return (
         <Div onClick={event => onClick(event)} onContextMenu={event => onClick(event)}>
             {output}
-            <Cover isRevealed={isRevealed}/>
+            <Cover isRevealed={isRevealed}>{isFlag && 'F'}</Cover>
+            <Cover isRevealed={true}/>
         </Div>
     )
 };
@@ -51,7 +52,7 @@ export class TileModule {
         this._isMine = false;
         this._isFlag = false;
         this._isRevealed = false;
-        this._position = {row, col};
+        this._position = { row, col };
     }
 
     get value() {
