@@ -4,9 +4,11 @@ import { cloneDeep } from 'lodash';
 
 import Tile from './Tile';
 import {
-    generateNewBoard,
+    generateEmptyBoard,
+    generateMinesOnBoard,
     flood,
     revealAllMines,
+    flagAndUnflag,
     isGameover
 } from './helper';
 
@@ -34,31 +36,40 @@ const GameBoard = () => {
     const numOfMines = 10;
 
     const [gameover, setGameover] = useState(false);
-    const [board, setBoard] = useState(generateNewBoard(size, numOfMines));
+    const [board, setBoard] = useState(generateEmptyBoard(size));
+    const [isFirstClick, setIsFirstClick] = useState(true);
 
     const handleClick = (event, tile) => {
         event.preventDefault();
 
+        if (tile.isRevealed || gameover) return;
+
+        const newBoard = cloneDeep(board);
+
         if (event.type === 'contextmenu') {
-            const newBoard = cloneDeep(board);
-            const { row, col } = tile.position;
-            newBoard[row][col].isFlag = !newBoard[row][col].isFlag;
-            setBoard(newBoard);
-            return;
-        }
-
-        if (tile.isRevealed || tile.isFlag || gameover) return;
-
-        if (tile.isMine) {
-            setGameover(true);
-            setBoard(revealAllMines(board));
+            flagAndUnflag(newBoard, tile);
 
         } else {
-            const newBoard = flood(board, tile);
-            setBoard(newBoard);
-            setGameover(isGameover(newBoard, numOfMines));
+            if (tile.isFlag) return;
+
+            if (isFirstClick) {
+                generateMinesOnBoard(newBoard, numOfMines, tile.position)
+                setIsFirstClick(false);
+            }
+
+            if (tile.isMine) {
+                setGameover(true);
+                revealAllMines(newBoard)
+
+            } else {
+                flood(newBoard, tile);
+            }
+
         }
-    }
+
+        setGameover(isGameover(newBoard, numOfMines));
+        setBoard(newBoard);
+    };
 
     return (
         <Container>
