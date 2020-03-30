@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "homepage": "https://zettoy.github.io/minesweeper-react",
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "build": "webpack",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +20,7 @@
     "babel-loader": "^8.1.0",
     "css-loader": "^3.4.2",
     "file-loader": "^6.0.0",
+    "gh-pages": "^2.2.0",
     "html-loader": "^1.0.0",
     "html-webpack-plugin": "^4.0.1",
     "style-loader": "^1.1.3",
