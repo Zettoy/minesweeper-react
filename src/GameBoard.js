@@ -81,9 +81,9 @@ const GameBoard = () => {
         <Container>
             <div>
                 <label>Size:</label>
-                <input onChange={event => setSize(event.target.value)}/>
+                <input value={size} onChange={event => setSize(event.target.value)}/>
                 <label>Mines:</label>
-                <input onChange={event => setNumOfMines(event.target.value)}/>
+                <input value={numOfMines} onChange={event => setNumOfMines(event.target.value)}/>
                 <button onClick={newGame}>New Game</button>
             </div>
             <Board size={board.length}>
